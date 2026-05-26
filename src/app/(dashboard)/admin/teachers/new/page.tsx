@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { createTeacher } from "@/lib/actions";
 import Link from "next/link";
 
