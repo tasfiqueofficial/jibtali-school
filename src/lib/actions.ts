@@ -39,7 +39,7 @@ export async function createStudent(formData: FormData) {
   const validatedFields = StudentSchema.safeParse(Object.fromEntries(formData.entries()));
 
   if (!validatedFields.success) {
-    return { error: validatedFields.error.flatten().fieldErrors };
+    throw new Error(JSON.stringify(validatedFields.error.flatten().fieldErrors));
   }
 
   const { name, email, password, rollNo, classId } = validatedFields.data;
@@ -62,9 +62,9 @@ export async function createStudent(formData: FormData) {
     });
   } catch (error: any) {
     if (error.code === 'P2002') {
-      return { error: { email: ["Email or Roll No already exists"] } };
+      throw new Error("Email or Roll No already exists");
     }
-    return { error: { message: ["Database Error: Failed to create student"] } };
+    throw new Error("Database Error: Failed to create student");
   }
 
   revalidatePath("/admin/students");
@@ -83,7 +83,7 @@ export async function createTeacher(formData: FormData) {
   const validatedFields = TeacherSchema.safeParse(Object.fromEntries(formData.entries()));
 
   if (!validatedFields.success) {
-    return { error: validatedFields.error.flatten().fieldErrors };
+    throw new Error(JSON.stringify(validatedFields.error.flatten().fieldErrors));
   }
 
   const { name, email, password, designation, phone } = validatedFields.data;
@@ -106,9 +106,9 @@ export async function createTeacher(formData: FormData) {
     });
   } catch (error: any) {
     if (error.code === 'P2002') {
-      return { error: { email: ["Email already exists"] } };
+      throw new Error("Email already exists");
     }
-    return { error: { message: ["Database Error: Failed to create teacher"] } };
+    throw new Error("Database Error: Failed to create teacher");
   }
 
   revalidatePath("/admin/teachers");
@@ -125,7 +125,7 @@ export async function createNotice(formData: FormData) {
   const validatedFields = NoticeSchema.safeParse(Object.fromEntries(formData.entries()));
 
   if (!validatedFields.success) {
-    return { error: validatedFields.error.flatten().fieldErrors };
+    throw new Error(JSON.stringify(validatedFields.error.flatten().fieldErrors));
   }
 
   const { title, content, classId } = validatedFields.data;
@@ -139,7 +139,7 @@ export async function createNotice(formData: FormData) {
       },
     });
   } catch (error) {
-    return { error: { message: ["Database Error: Failed to create notice"] } };
+    throw new Error("Database Error: Failed to create notice");
   }
 
   revalidatePath("/admin/notices");
